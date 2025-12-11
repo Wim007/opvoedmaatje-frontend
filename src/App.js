@@ -2,7 +2,7 @@
 // Opvoedmaatje - App.js
 // ==============================================
 
-import React, { startTransition, useState } from "react";
+import React, { useState } from "react";
 import "./index.css";
 
 // ==============================================
@@ -16,61 +16,22 @@ function StepIndicator({ step }) {
   ];
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        gap: "8px",
-        marginBottom: "24px",
-      }}
-    >
+    <div className="step-indicator">
       {steps.map((s) => {
         const isActive = s.nr === step;
         const isCompleted = s.nr < step;
-
-        const background = isActive
-          ? "#1d4ed8"
+        const statusClass = isActive
+          ? "active"
           : isCompleted
-          ? "#10b981"
-          : "#e5e7eb";
-        const color =
-          isActive || isCompleted ? "#ffffff" : "#4b5563";
+          ? "completed"
+          : "upcoming";
 
         return (
-          <div
-            key={s.nr}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              padding: "4px 8px",
-            }}
-          >
-            <div
-              style={{
-                width: 24,
-                height: 24,
-                borderRadius: "9999px",
-                background,
-                color,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.8rem",
-                fontWeight: 600,
-              }}
-            >
+          <div key={s.nr} className={`step-item ${statusClass}`}>
+            <div className="step-circle">
               {s.nr}
             </div>
-            <span
-              style={{
-                fontSize: "0.9rem",
-                color: isActive ? "#111827" : "#6b7280",
-                fontWeight: isActive ? 600 : 500,
-              }}
-            >
-              {s.label}
-            </span>
+            <span className="step-label">{s.label}</span>
           </div>
         );
       })}
@@ -650,10 +611,99 @@ function GoalStep({ onBack, goals, setGoals, onFinish }) {
 }
 
 // ==============================================
+// CHAT PAGINA
+// ==============================================
+function ChatPage() {
+  const [messages, setMessages] = useState([
+    {
+      id: 1,
+      author: "Opvoedmaatje",
+      text: "Welkom terug! Hoe kan ik je vandaag helpen?",
+    },
+    {
+      id: 2,
+      author: "Jij",
+      text: "Heb je tips voor rustig naar bed gaan?",
+    },
+    {
+      id: 3,
+      author: "Opvoedmaatje",
+      text:
+        "Zeker! Vertel kort hoe bedtijd nu gaat. Dan denk ik met je mee met kleine, haalbare stappen.",
+    },
+  ]);
+  const [input, setInput] = useState("");
+
+  const handleSend = (event) => {
+    event.preventDefault();
+    if (!input.trim()) return;
+
+    const newMessage = {
+      id: Date.now(),
+      author: "Jij",
+      text: input.trim(),
+    };
+
+    setMessages((prev) => [...prev, newMessage]);
+    setInput("");
+
+    setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          author: "Opvoedmaatje",
+          text: "Dank je! Ik bekijk je vraag en kom zo bij je terug.",
+        },
+      ]);
+    }, 400);
+  };
+
+  return (
+    <div className="app-card chat-page">
+      <div className="chat-logo-wrapper">
+        <img
+          src="/logo-opvoedmaatje.png"
+          alt="Opvoedmaatje logo"
+          className="chat-logo"
+        />
+      </div>
+
+      <div className="chat-container">
+        <div className="chat-scroll">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`chat-bubble ${
+                message.author === "Jij" ? "from-user" : "from-assistant"
+              }`}
+            >
+              <span className="chat-author">{message.author}</span>
+              <p className="chat-text">{message.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <form className="chat-input-bar" onSubmit={handleSend}>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Typ je bericht..."
+          />
+          <button type="submit">Verstuur</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ==============================================
 // HOOFD-COMPONENT - APP
 // ==============================================
 export default function App() {
   const [step, setStep] = useState(1);
+  const [view, setView] = useState("onboarding");
 
   // Gezin: lijst van kinderen
   const [children, setChildren] = useState([
@@ -672,88 +722,54 @@ export default function App() {
   const prev = () => setStep((s) => Math.max(s - 1, 1));
 
   const handleFinish = () => {
-    // Hier kun je later:
-    // - gegevens lokaal opslaan
-    // - of doorgeven aan de Assistants API
     console.log("GEZIN:", children);
     console.log("DOELEN:", goals);
-    alert(
-      "Dank je wel. Je gegevens zijn ingevuld. Ze blijven op je eigen toestel en helpen om het gesprek persoonlijker te maken."
-    );
+    setView("chat");
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f3f4f6",
-        padding: "24px 12px",
-        boxSizing: "border-box",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "600px",
-          width: "100%",
-          margin: "40px auto",
-          background: "#ffffff",
-          borderRadius: "16px",
-          padding: "24px 24px 32px",
-          boxShadow: "0 10px 30px rgba(15, 23, 42, 0.12)",
-        }}
-      >
-        {/* HEADER LOGO + TITEL + SUBTEKST */}
-        <header
-          style={{ marginBottom: "24px", textAlign: "center" }}
-        >
-          <img
-            src="/logo-opvoedmaatje.png"
-            alt="Opvoedmaatje logo"
-            style={{ width: "120px", marginBottom: "12px" }}
-          />
-          <h1
-            style={{
-              margin: 0,
-              fontSize: "1.8rem",
-              color: "#1f2937",
-            }}
-          >
-            Opvoedmaatje
-          </h1>
-          <p
-            style={{
-              marginTop: "8px",
-              marginBottom: 0,
-              color: "#4b5563",
-            }}
-          >
-            Je doet je best. Soms is dat zwaar. Opvoedmaatje denkt
-            met je mee.
-          </p>
-        </header>
+    <div className="app-shell">
+      {view === "onboarding" ? (
+        <div className="app-card">
+          {/* HEADER LOGO + SUBTEKST */}
+          <header className="brand">
+            <div className="brand-logo-wrapper">
+              <img
+                src="/logo-opvoedmaatje.png"
+                alt="Opvoedmaatje logo"
+                className="brand-logo"
+              />
+            </div>
+            <p className="brand-tagline">
+              Je doet je best. Soms is dat zwaar. Opvoedmaatje denkt met je mee.
+            </p>
+          </header>
 
-        {/* STAP INDICATOR */}
-        <StepIndicator step={step} />
+          {/* STAP INDICATOR */}
+          <StepIndicator step={step} />
 
-        {/* STAPPEN LOGICA */}
-        {step === 1 && <WelcomeStep onNext={next} />}
-        {step === 2 && (
-          <FamilyStep
-            onNext={next}
-            onBack={prev}
-            children={children}
-            setChildren={setChildren}
-          />
-        )}
-        {step === 3 && (
-          <GoalStep
-            onBack={prev}
-            goals={goals}
-            setGoals={setGoals}
-            onFinish={handleFinish}
-          />
-        )}
-      </div>
+          {/* STAPPEN LOGICA */}
+          {step === 1 && <WelcomeStep onNext={next} />}
+          {step === 2 && (
+            <FamilyStep
+              onNext={next}
+              onBack={prev}
+              children={children}
+              setChildren={setChildren}
+            />
+          )}
+          {step === 3 && (
+            <GoalStep
+              onBack={prev}
+              goals={goals}
+              setGoals={setGoals}
+              onFinish={handleFinish}
+            />
+          )}
+        </div>
+      ) : (
+        <ChatPage />
+      )}
     </div>
   );
 }
