@@ -1,775 +1,350 @@
-// ==============================================
-// Opvoedmaatje - App.js
-// ==============================================
-
 import React, { useState } from "react";
 import "./index.css";
 
-// ==============================================
-// STAP-INDICATOR BOLLETJES
-// ==============================================
-function StepIndicator({ step }) {
-  const steps = [
-    { nr: 1, label: "Welkom" },
-    { nr: 2, label: "Gezin" },
-    { nr: 3, label: "Doelen" },
-  ];
+const GOAL_OPTIONS = [
+  "Grenzen stellen",
+  "Minder strijd",
+  "Meer rust",
+  "Betere communicatie",
+  "Meer positiviteit",
+  "Structuur aanbrengen",
+];
 
+function Logo({ small }) {
   return (
-    <div className="step-indicator">
-      {steps.map((s) => {
-        const isActive = s.nr === step;
-        const isCompleted = s.nr < step;
-        const statusClass = isActive
-          ? "active"
-          : isCompleted
-          ? "completed"
-          : "upcoming";
+    <div className={`logo-placeholder ${small ? "logo-small" : ""}`}></div>
+  );
+}
 
-        return (
-          <div key={s.nr} className={`step-item ${statusClass}`}>
-            <div className="step-circle">
-              {s.nr}
-            </div>
-            <span className="step-label">{s.label}</span>
-          </div>
-        );
-      })}
+function WelcomeScreen({ onStart }) {
+  return (
+    <div className="screen-card">
+      <div className="logo-row">
+        <Logo />
+      </div>
+      <div className="card">
+        <h1>Welkom bij Opvoedmaatje</h1>
+        <p className="muted">Samen vinden we rust in de opvoeding.</p>
+        <button className="btn primary" onClick={onStart}>
+          Starten
+        </button>
+      </div>
     </div>
   );
 }
 
-// ==============================================
-// STAP 1 - WELKOM
-// ==============================================
-function WelcomeStep({ onNext }) {
+function FamilyScreen({ onBack, onNext, parentName, setParentName, childNames, setChildNames, childAges, setChildAges }) {
   return (
-    <section>
-      <h2 style={{ marginTop: 0, marginBottom: "8px" }}>
-        Even kennismaken
-      </h2>
-
-      <p
-        style={{
-          marginBottom: "16px",
-          color: "#4b5563",
-          lineHeight: 1.5,
-        }}
-      >
-        Opvoedmaatje is er om jou snel en praktisch te ondersteunen.
-        Geen ingewikkelde woorden, gewoon iemand die met je meedenkt
-        over het dagelijks gedoe thuis.
-      </p>
-
-      <ul
-        style={{
-          marginLeft: "18px",
-          marginBottom: "16px",
-          color: "#4b5563",
-        }}
-      >
-        <li>Korte vragen over opvoeden stellen</li>
-        <li>Concrete tips en voorbeelden krijgen</li>
-        <li>Zien wat bij jouw gezin past</li>
-      </ul>
-
-      <p
-        style={{
-          marginBottom: "20px",
-          color: "#4b5563",
-          fontSize: "0.9rem",
-        }}
-      >
-        In de volgende stappen vragen we alleen om{" "}
-        <strong>voornamen, leeftijden</strong> en een paar{" "}
-        <strong>doelen</strong>. Deze gegevens blijven op je eigen
-        toestel en worden gebruikt om het gesprek persoonlijker te
-        maken.
-      </p>
-
-      <button
-        type="button"
-        onClick={onNext}
-        style={{
-          padding: "10px 20px",
-          borderRadius: "9999px",
-          border: "none",
-          background: "#1d4ed8",
-          color: "#ffffff",
-          fontWeight: 600,
-          cursor: "pointer",
-        }}
-      >
-        Doorgaan
-      </button>
-    </section>
-  );
-}
-
-// ==============================================
-// STAP 2 - GEZIN
-// ==============================================
-function FamilyStep({ onNext, onBack, children, setChildren }) {
-  const handleChange = (index, field, value) => {
-    const updated = [...children];
-    updated[index] = { ...updated[index], [field]: value };
-    setChildren(updated);
-  };
-
-  const addChild = () => {
-    if (children.length >= 5) return; // max 5 kinderen
-    setChildren([
-      ...children,
-      { firstName: "", age: "", gender: "" },
-    ]);
-  };
-
-  const removeChild = (index) => {
-    if (children.length === 1) return; // minstens 1 kind laten staan
-    const updated = children.filter((_, i) => i !== index);
-    setChildren(updated);
-  };
-
-  return (
-    <section>
-      <h2 style={{ marginTop: 0, marginBottom: "8px" }}>
-        Jouw gezin
-      </h2>
-
-      <p
-        style={{
-          marginBottom: "16px",
-          color: "#4b5563",
-          lineHeight: 1.5,
-        }}
-      >
-        Vertel kort wie er in je gezin zitten. We vragen alleen om{" "}
-        <strong>voornamen</strong>, leeftijd en of het een jongen of
-        meisje is. Deze gegevens blijven op je eigen toestel en worden
-        alleen gebruikt om het gesprek in Opvoedmaatje persoonlijker
-        te maken.
-      </p>
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-          marginBottom: "16px",
-        }}
-      >
-        {children.map((child, index) => (
-          <div
-            key={index}
-            style={{
-              padding: "12px 0",
-              borderBottom: "1px solid #e5e7eb",
-            }}
-          >
-            <h3
-              style={{
-                margin: 0,
-                marginBottom: "8px",
-                fontSize: "1rem",
-                color: "#374151",
-              }}
-            >
-              Kind {index + 1}
-            </h3>
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "8px",
-              }}
-            >
-              <label
-                style={{
-                  fontSize: "0.85rem",
-                  color: "#4b5563",
-                }}
-              >
-                Voornaam
-                <input
-                  type="text"
-                  value={child.firstName}
-                  onChange={(e) =>
-                    handleChange(
-                      index,
-                      "firstName",
-                      e.target.value
-                    )
-                  }
-                  placeholder="Bijv. Evi"
-                  style={{
-                    width: "100%",
-                    padding: "8px 10px",
-                    marginTop: "4px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "0.95rem",
-                  }}
-                />
-              </label>
-
-              <label
-                style={{
-                  fontSize: "0.85rem",
-                  color: "#4b5563",
-                }}
-              >
-                Leeftijd
-                <input
-                  type="number"
-                  min="0"
-                  max="21"
-                  value={child.age}
-                  onChange={(e) =>
-                    handleChange(index, "age", e.target.value)
-                  }
-                  placeholder="Bijv. 7"
-                  style={{
-                    width: "100%",
-                    padding: "8px 10px",
-                    marginTop: "4px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "0.95rem",
-                  }}
-                />
-              </label>
-
-              <label
-                style={{
-                  fontSize: "0.85rem",
-                  color: "#4b5563",
-                }}
-              >
-                Jongen / meisje
-                <select
-                  value={child.gender}
-                  onChange={(e) =>
-                    handleChange(
-                      index,
-                      "gender",
-                      e.target.value
-                    )
-                  }
-                  style={{
-                    width: "100%",
-                    padding: "8px 10px",
-                    marginTop: "4px",
-                    borderRadius: "8px",
-                    border: "1px solid #d1d5db",
-                    fontSize: "0.95rem",
-                    background: "#ffffff",
-                  }}
-                >
-                  <option value="">Maak een keuze</option>
-                  <option value="jongen">Jongen</option>
-                  <option value="meisje">Meisje</option>
-                  <option value="anders">
-                    Anders / zeg ik liever niet
-                  </option>
-                </select>
-              </label>
-
-              {children.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeChild(index)}
-                  style={{
-                    marginTop: "4px",
-                    padding: "4px 0",
-                    border: "none",
-                    background: "none",
-                    color: "#b91c1c",
-                    fontSize: "0.8rem",
-                    cursor: "pointer",
-                    textAlign: "left",
-                  }}
-                >
-                  Kind {index + 1} verwijderen
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
+    <div className="screen-card">
+      <div className="logo-row">
+        <Logo />
       </div>
-
-      <button
-        type="button"
-        onClick={addChild}
-        style={{
-          marginBottom: "24px",
-          padding: "8px 14px",
-          borderRadius: "9999px",
-          border: "1px dashed #9ca3af",
-          background: "#f9fafb",
-          cursor: "pointer",
-          fontSize: "0.9rem",
-        }}
-      >
-        + Nog een kind toevoegen
-      </button>
-
-      <div style={{ display: "flex", gap: "8px" }}>
-        <button
-          type="button"
-          onClick={onBack}
-          style={{
-            padding: "10px 20px",
-            borderRadius: "9999px",
-            border: "1px solid #d1d5db",
-            background: "#ffffff",
-            color: "#374151",
-            cursor: "pointer",
-            fontWeight: 500,
-          }}
-        >
-          Terug
-        </button>
-
-        <button
-          type="button"
-          onClick={onNext}
-          style={{
-            padding: "10px 20px",
-            borderRadius: "9999px",
-            border: "none",
-            background: "#1d4ed8",
-            color: "#ffffff",
-            cursor: "pointer",
-            fontWeight: 600,
-          }}
-        >
-          Doorgaan
-        </button>
-      </div>
-    </section>
-  );
-}
-
-// ==============================================
-// STAP 3 - DOELEN
-// ==============================================
-
-// Veelvoorkomende opvoedthema's als standaardopties
-const PRESET_GOALS = [
-  {
-    id: "schermtijd",
-    label: "Mijn kind zit te veel op telefoon/tablet/computer",
-  },
-  {
-    id: "niet_luisteren",
-    label:
-      "Mijn kind luistert vaak niet / reageert pas na 10x vragen",
-  },
-  {
-    id: "driftbuien",
-    label: "Driftbuien / woede-uitbarstingen",
-  },
-  {
-    id: "grenzen",
-    label: "Grenzen stellen en consequent blijven",
-  },
-  {
-    id: "broers_zussen",
-    label: "Ruzie tussen broers/zussen (veel strijd in huis)",
-  },
-  {
-    id: "bedtijd",
-    label: "Gedoe rond bedtijd / inslapen",
-  },
-  {
-    id: "school",
-    label: "Problemen rond school / huiswerk / motivatie",
-  },
-  {
-    id: "zelfvertrouwen",
-    label:
-      "Onzekerheid / weinig zelfvertrouwen / veel piekeren",
-  },
-];
-
-function GoalStep({ onBack, goals, setGoals, onFinish }) {
-  const handleChange = (field, value) => {
-    setGoals((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const togglePreset = (id) => {
-    setGoals((prev) => {
-      const current = prev.presets || [];
-      const exists = current.includes(id);
-      const updated = exists
-        ? current.filter((item) => item !== id)
-        : [...current, id];
-
-      return { ...prev, presets: updated };
-    });
-  };
-
-  const isSelected = (id) => (goals.presets || []).includes(id);
-
-  return (
-    <section>
-      <h2 style={{ marginTop: 0, marginBottom: "8px" }}>
-        Jouw doelen
-      </h2>
-
-      <p
-        style={{
-          marginBottom: "12px",
-          color: "#4b5563",
-          lineHeight: 1.5,
-        }}
-      >
-        Waar hoop je dat Opvoedmaatje je het meest mee helpt?
-        Kies hieronder situaties die bij jullie passen. Daarna kun je
-        jouw eigen situatie in je eigen woorden toelichten.
-      </p>
-
-      {/* STANDAARDDOELEN - CHECKBOXEN */}
-      <div
-        style={{
-          marginBottom: "20px",
-          padding: "12px",
-          borderRadius: "12px",
-          border: "1px solid #e5e7eb",
-          background: "#f9fafb",
-        }}
-      >
-        <p
-          style={{
-            marginTop: 0,
-            marginBottom: "8px",
-            fontSize: "0.85rem",
-            color: "#4b5563",
-            fontWeight: 500,
-          }}
-        >
-          Kies wat bij jullie past (meerdere opties mogelijk):
-        </p>
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "6px",
-          }}
-        >
-          {PRESET_GOALS.map((item) => (
-            <label
-              key={item.id}
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: "8px",
-                fontSize: "0.9rem",
-                color: "#374151",
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={isSelected(item.id)}
-                onChange={() => togglePreset(item.id)}
-                style={{ marginTop: "2px" }}
-              />
-              <span>{item.label}</span>
-            </label>
-          ))}
+      <div className="card">
+        <h2>Gezinssamenstelling</h2>
+        <div className="form-stack">
+          <label className="form-label">
+            Naam ouder/verzorger
+            <input
+              className="input"
+              type="text"
+              value={parentName}
+              onChange={(e) => setParentName(e.target.value)}
+              placeholder="Bijv. Sam"
+            />
+          </label>
+          <label className="form-label">
+            Namen kinderen
+            <input
+              className="input"
+              type="text"
+              value={childNames}
+              onChange={(e) => setChildNames(e.target.value)}
+              placeholder="Bijv. Evi en Noor"
+            />
+          </label>
+          <label className="form-label">
+            Leeftijd kinderen
+            <input
+              className="input"
+              type="text"
+              value={childAges}
+              onChange={(e) => setChildAges(e.target.value)}
+              placeholder="Bijv. 5 en 8"
+            />
+          </label>
+        </div>
+        <div className="button-row">
+          <button className="btn ghost" onClick={onBack}>
+            Terug
+          </button>
+          <button className="btn primary" onClick={onNext}>
+            Volgende stap
+          </button>
         </div>
       </div>
-
-      {/* VRIJE TEKSTVELDEN */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-          marginBottom: "24px",
-        }}
-      >
-        <label
-          style={{
-            fontSize: "0.85rem",
-            color: "#4b5563",
-          }}
-        >
-          In je eigen woorden: wat is nu het belangrijkste waar je
-          hulp bij wilt?
-          <textarea
-            value={goals.main}
-            onChange={(e) =>
-              handleChange("main", e.target.value)
-            }
-            placeholder="Bijvoorbeeld: ik wil minder strijd over schermtijd met mijn 10-jarige zoon."
-            rows={3}
-            style={{
-              width: "100%",
-              padding: "8px 10px",
-              marginTop: "4px",
-              borderRadius: "8px",
-              border: "1px solid #d1d5db",
-              fontSize: "0.95rem",
-              resize: "vertical",
-            }}
-          />
-        </label>
-
-        <label
-          style={{
-            fontSize: "0.85rem",
-            color: "#4b5563",
-          }}
-        >
-          Wat vind je het belangrijkste op korte termijn?
-          <textarea
-            value={goals.priority}
-            onChange={(e) =>
-              handleChange("priority", e.target.value)
-            }
-            placeholder="Bijvoorbeeld: meer rust aan tafel, minder geschreeuw, één moment dat nu het zwaarst voelt."
-            rows={2}
-            style={{
-              width: "100%",
-              padding: "8px 10px",
-              marginTop: "4px",
-              borderRadius: "8px",
-              border: "1px solid #d1d5db",
-              fontSize: "0.95rem",
-              resize: "vertical",
-            }}
-          />
-        </label>
-
-        <label
-          style={{
-            fontSize: "0.85rem",
-            color: "#4b5563",
-          }}
-        >
-          Iets specifieks waar je tegenaan loopt? (optioneel)
-          <textarea
-            value={goals.notes}
-            onChange={(e) =>
-              handleChange("notes", e.target.value)
-            }
-            placeholder="Bijvoorbeeld: mijn dochter van 15 blowt, of: mijn zoon met ADHD explodeert bij kleine dingen."
-            rows={2}
-            style={{
-              width: "100%",
-              padding: "8px 10px",
-              marginTop: "4px",
-              borderRadius: "8px",
-              border: "1px solid #d1d5db",
-              fontSize: "0.95rem",
-              resize: "vertical",
-            }}
-          />
-        </label>
-      </div>
-
-      {/* KNOPPEN TERUG / AFRONDEN */}
-      <div style={{ display: "flex", gap: "8px" }}>
-        <button
-          type="button"
-          onClick={onBack}
-          style={{
-            padding: "10px 20px",
-            borderRadius: "9999px",
-            border: "1px solid #d1d5db",
-            background: "#ffffff",
-            color: "#374151",
-            cursor: "pointer",
-            fontWeight: 500,
-          }}
-        >
-          Terug
-        </button>
-
-        <button
-          type="button"
-          onClick={onFinish}
-          style={{
-            padding: "10px 20px",
-            borderRadius: "9999px",
-            border: "none",
-            background: "#16a34a",
-            color: "#ffffff",
-            cursor: "pointer",
-            fontWeight: 600,
-          }}
-        >
-          Afronden
-        </button>
-      </div>
-    </section>
+    </div>
   );
 }
 
-// ==============================================
-// CHAT PAGINA
-// ==============================================
-function ChatPage() {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      author: "Opvoedmaatje",
-      text: "Welkom terug! Hoe kan ik je vandaag helpen?",
-    },
-    {
-      id: 2,
-      author: "Jij",
-      text: "Heb je tips voor rustig naar bed gaan?",
-    },
-    {
-      id: 3,
-      author: "Opvoedmaatje",
-      text:
-        "Zeker! Vertel kort hoe bedtijd nu gaat. Dan denk ik met je mee met kleine, haalbare stappen.",
-    },
-  ]);
-  const [input, setInput] = useState("");
+function GoalsScreen({ onBack, onFinish, selectedGoals, toggleGoal }) {
+  return (
+    <div className="screen-card">
+      <div className="logo-row">
+        <Logo />
+      </div>
+      <div className="card">
+        <h2>Waar wil je hulp bij?</h2>
+        <div className="chips">
+          {GOAL_OPTIONS.map((goal) => (
+            <button
+              key={goal}
+              className={`chip ${selectedGoals.includes(goal) ? "active" : ""}`}
+              onClick={() => toggleGoal(goal)}
+              type="button"
+            >
+              {goal}
+            </button>
+          ))}
+        </div>
+        <button className="btn primary full" onClick={onFinish}>
+          Afronden en starten met chatten
+        </button>
+      </div>
+    </div>
+  );
+}
 
-  const handleSend = (event) => {
-    event.preventDefault();
-    if (!input.trim()) return;
+function AccessCodeScreen({ code, setCode, onConfirm }) {
+  return (
+    <div className="screen-card">
+      <div className="logo-row">
+        <Logo />
+      </div>
+      <div className="card">
+        <h2>Voer je toegangscode in</h2>
+        <input
+          className="input"
+          type="text"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          placeholder="Bijv. 1234-5678"
+        />
+        <button className="btn primary full" onClick={onConfirm}>
+          Bevestigen
+        </button>
+        <p className="muted small">
+          Je krijgt deze code via je gemeente of zorgverzekeraar.
+        </p>
+      </div>
+    </div>
+  );
+}
 
-    const newMessage = {
-      id: Date.now(),
-      author: "Jij",
-      text: input.trim(),
-    };
+function LoginScreen({ email, setEmail, password, setPassword, onLogin, onRegister }) {
+  return (
+    <div className="screen-card">
+      <div className="logo-row">
+        <Logo />
+      </div>
+      <div className="card">
+        <h2>Inloggen</h2>
+        <div className="form-stack">
+          <input
+            className="input"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="E-mail"
+          />
+          <input
+            className="input"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Wachtwoord"
+          />
+        </div>
+        <button className="btn primary full" onClick={onLogin}>
+          Inloggen
+        </button>
+        <button className="link" type="button">
+          Wachtwoord vergeten?
+        </button>
+        <button className="link" type="button" onClick={onRegister}>
+          Nog geen account? Registreren
+        </button>
+      </div>
+    </div>
+  );
+}
 
-    setMessages((prev) => [...prev, newMessage]);
-    setInput("");
+function RegisterScreen({ name, setName, email, setEmail, password, setPassword, onCreate, onLogin }) {
+  return (
+    <div className="screen-card">
+      <div className="logo-row">
+        <Logo />
+      </div>
+      <div className="card">
+        <h2>Account aanmaken</h2>
+        <div className="form-stack">
+          <input
+            className="input"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Naam"
+          />
+          <input
+            className="input"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="E-mailadres"
+          />
+          <div className="password-field">
+            <input
+              className="input"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Wachtwoord"
+            />
+            <span className="eye-placeholder" aria-hidden="true">
+              📷
+            </span>
+          </div>
+        </div>
+        <button className="btn primary full" onClick={onCreate}>
+          Account aanmaken
+        </button>
+        <button className="link" type="button" onClick={onLogin}>
+          Al een account? Inloggen
+        </button>
+      </div>
+    </div>
+  );
+}
 
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          author: "Opvoedmaatje",
-          text: "Dank je! Ik bekijk je vraag en kom zo bij je terug.",
-        },
-      ]);
-    }, 400);
-  };
+function ChatScreen() {
+  const messages = [
+    { id: 1, author: "Opvoedmaatje", text: "Hoi! Ik ben er voor je. Waar lopen jullie nu tegenaan?" },
+    { id: 2, author: "Jij", text: "We hebben veel strijd over schermtijd." },
+    { id: 3, author: "Opvoedmaatje", text: "Dank je. Wat gebeurt er meestal vlak voordat de strijd begint?" },
+    { id: 4, author: "Jij", text: "Als ik zeg dat het tijd is om te stoppen." },
+    { id: 5, author: "Opvoedmaatje", text: "Helder. Ik geef je zo enkele ideeën om het rustiger te laten verlopen." },
+  ];
 
   return (
-    <div className="app-card chat-page">
-      <div className="chat-logo-wrapper">
-        <img
-          src="/logo-opvoedmaatje.png"
-          alt="Opvoedmaatje logo"
-          className="chat-logo"
-        />
-      </div>
-
-      <div className="chat-container">
-        <div className="chat-scroll">
+    <div className="chat-screen">
+      <header className="chat-header">
+        <Logo small />
+        <span className="chat-title">Opvoedmaatje</span>
+      </header>
+      <div className="chat-card">
+        <div className="chat-messages">
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`chat-bubble ${
-                message.author === "Jij" ? "from-user" : "from-assistant"
-              }`}
+              className={`bubble ${message.author === "Jij" ? "user" : "assistant"}`}
             >
-              <span className="chat-author">{message.author}</span>
-              <p className="chat-text">{message.text}</p>
+              <p className="bubble-author">{message.author}</p>
+              <p className="bubble-text">{message.text}</p>
             </div>
           ))}
         </div>
-
-        <form className="chat-input-bar" onSubmit={handleSend}>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Typ je bericht..."
-          />
-          <button type="submit">Verstuur</button>
+        <form className="chat-input" onSubmit={(e) => e.preventDefault()}>
+          <input className="chat-field" placeholder="Typ een bericht…" />
+          <button className="send-button" type="submit">
+            →
+          </button>
         </form>
       </div>
     </div>
   );
 }
 
-// ==============================================
-// HOOFD-COMPONENT - APP
-// ==============================================
 export default function App() {
-  const [step, setStep] = useState(1);
-  const [view, setView] = useState("onboarding");
+  const [screen, setScreen] = useState("welcome");
+  const [parentName, setParentName] = useState("");
+  const [childNames, setChildNames] = useState("");
+  const [childAges, setChildAges] = useState("");
+  const [selectedGoals, setSelectedGoals] = useState([]);
+  const [accessCode, setAccessCode] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [registerName, setRegisterName] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
 
-  // Gezin: lijst van kinderen
-  const [children, setChildren] = useState([
-    { firstName: "", age: "", gender: "" },
-  ]);
-
-  // Doelen: vrije tekst + gekozen standaarddoelen
-  const [goals, setGoals] = useState({
-    main: "",
-    priority: "",
-    notes: "",
-    presets: [],
-  });
-
-  const next = () => setStep((s) => Math.min(s + 1, 3));
-  const prev = () => setStep((s) => Math.max(s - 1, 1));
-
-  const handleFinish = () => {
-    console.log("GEZIN:", children);
-    console.log("DOELEN:", goals);
-    setView("chat");
+  const toggleGoal = (goal) => {
+    setSelectedGoals((prev) =>
+      prev.includes(goal) ? prev.filter((g) => g !== goal) : [...prev, goal]
+    );
   };
 
-  return (
-    <div className="app-shell">
-      {view === "onboarding" ? (
-        <div className="app-card">
-          {/* HEADER LOGO + SUBTEKST */}
-          <header className="brand">
-            <div className="brand-logo-wrapper">
-              <img
-                src="/logo-opvoedmaatje.png"
-                alt="Opvoedmaatje logo"
-                className="brand-logo"
-              />
-            </div>
-            <p className="brand-tagline">
-              Je doet je best. Soms is dat zwaar. Opvoedmaatje denkt met je mee.
-            </p>
-          </header>
+  const renderScreen = () => {
+    switch (screen) {
+      case "welcome":
+        return <WelcomeScreen onStart={() => setScreen("family")} />;
+      case "family":
+        return (
+          <FamilyScreen
+            onBack={() => setScreen("welcome")}
+            onNext={() => setScreen("goals")}
+            parentName={parentName}
+            setParentName={setParentName}
+            childNames={childNames}
+            setChildNames={setChildNames}
+            childAges={childAges}
+            setChildAges={setChildAges}
+          />
+        );
+      case "goals":
+        return (
+          <GoalsScreen
+            onBack={() => setScreen("family")}
+            onFinish={() => setScreen("access")}
+            selectedGoals={selectedGoals}
+            toggleGoal={toggleGoal}
+          />
+        );
+      case "access":
+        return (
+          <AccessCodeScreen
+            code={accessCode}
+            setCode={setAccessCode}
+            onConfirm={() => setScreen("login")}
+          />
+        );
+      case "login":
+        return (
+          <LoginScreen
+            email={loginEmail}
+            setEmail={setLoginEmail}
+            password={loginPassword}
+            setPassword={setLoginPassword}
+            onLogin={() => setScreen("chat")}
+            onRegister={() => setScreen("register")}
+          />
+        );
+      case "register":
+        return (
+          <RegisterScreen
+            name={registerName}
+            setName={setRegisterName}
+            email={registerEmail}
+            setEmail={setRegisterEmail}
+            password={registerPassword}
+            setPassword={setRegisterPassword}
+            onCreate={() => setScreen("chat")}
+            onLogin={() => setScreen("login")}
+          />
+        );
+      case "chat":
+      default:
+        return <ChatScreen />;
+    }
+  };
 
-          {/* STAP INDICATOR */}
-          <StepIndicator step={step} />
-
-          {/* STAPPEN LOGICA */}
-          {step === 1 && <WelcomeStep onNext={next} />}
-          {step === 2 && (
-            <FamilyStep
-              onNext={next}
-              onBack={prev}
-              children={children}
-              setChildren={setChildren}
-            />
-          )}
-          {step === 3 && (
-            <GoalStep
-              onBack={prev}
-              goals={goals}
-              setGoals={setGoals}
-              onFinish={handleFinish}
-            />
-          )}
-        </div>
-      ) : (
-        <ChatPage />
-      )}
-    </div>
-  );
+  return <div className="app-shell">{renderScreen()}</div>;
 }
