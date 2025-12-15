@@ -31,6 +31,12 @@ body {
   gap: 16px;
 }
 
+.welcome-screen {
+  min-height: 100vh;
+  justify-content: center;
+  max-width: 390px;
+}
+
 .logo-row {
   display: flex;
   justify-content: center;
@@ -63,6 +69,21 @@ body {
   flex-direction: column;
   gap: 16px;
   text-align: center;
+}
+
+.welcome-card {
+  padding: 32px 28px;
+  gap: 14px;
+}
+
+.welcome-card h1 {
+  font-size: 1.7rem;
+  line-height: 1.2;
+}
+
+.welcome-card .muted {
+  font-size: 1rem;
+  color: #4b5563;
 }
 
 .card h1,
@@ -146,6 +167,14 @@ body {
 
 .btn:hover {
   transform: translateY(-1px);
+}
+
+.btn.no-motion {
+  transition: none;
+}
+
+.btn.no-motion:hover {
+  transform: none;
 }
 
 .chips {

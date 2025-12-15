@@ -18,14 +18,14 @@ function Logo({ small }) {
 
 function WelcomeScreen({ onStart }) {
   return (
-    <div className="screen-card">
+    <div className="screen-card welcome-screen">
       <div className="logo-row">
         <Logo />
       </div>
-      <div className="card">
+      <div className="card welcome-card">
         <h1>Welkom bij Opvoedmaatje</h1>
         <p className="muted">Samen vinden we rust in de opvoeding.</p>
-        <button className="btn primary" onClick={onStart}>
+        <button className="btn primary full no-motion" onClick={onStart}>
           Starten
         </button>
       </div>
