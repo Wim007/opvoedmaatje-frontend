@@ -42,6 +42,16 @@ body {
   justify-content: center;
   width: 100%;
 }
+/* ===== Logo (img) ===== */
+.logo-img{
+  width: min(680px, 92vw);
+  height: auto;
+  display: block;
+}
+
+.logo-klein{
+  width: min(320px, 70vw);
+}
 
 .logo-placeholder {
   width: 64px;
