@@ -43,12 +43,10 @@ body {
   width: 100%;
 }
 .logo-img {
-  width: min(240px, 50vw);
-}
+  width: min(240px, 60vw);}
 
 .logo-klein {
-  width: min(160px, 40vw);
-}
+  width: min(140px, 35vw);}
 
 
 
