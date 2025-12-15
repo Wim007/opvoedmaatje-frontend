@@ -10,11 +10,16 @@ const GOAL_OPTIONS = [
   "Structuur aanbrengen",
 ];
 
-function Logo({ small }) {
+function Logo({ klein }) {
   return (
-    <div className={`logo-placeholder ${small ? "logo-small" : ""}`}></div>
+    <img
+      src="/logo-opvoedmaatje.png"
+      alt="Opvoedmaatje"
+      className={klein ? "logo-img logo-klein" : "logo-img"}
+    />
   );
 }
+
 
 function WelcomeScreen({ onStart }) {
   return (
