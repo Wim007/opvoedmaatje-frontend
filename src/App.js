@@ -21,6 +21,7 @@ function Logo({ klein }) {
 }
 
 
+
 function WelcomeScreen({ onStart }) {
   return (
     <div className="screen-card welcome-screen">
