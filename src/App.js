@@ -244,7 +244,6 @@ function ChatScreen() {
     <div className="chat-screen">
       <header className="chat-header">
         <Logo small />
-        <span className="chat-title">Opvoedmaatje</span>
       </header>
       <div className="chat-card">
         <div className="chat-messages">
