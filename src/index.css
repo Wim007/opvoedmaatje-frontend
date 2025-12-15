@@ -42,16 +42,14 @@ body {
   justify-content: center;
   width: 100%;
 }
-/* ===== Logo (img) ===== */
-.logo-img{
-  width: min(420px, 80vw);
-  height: auto;
-  display: block;
+.logo-img {
+  width: min(240px, 50vw);
 }
 
-.logo-klein{
-  width: min(240px, 60vw);
+.logo-klein {
+  width: min(160px, 40vw);
 }
+
 
 
 .logo-placeholder {
