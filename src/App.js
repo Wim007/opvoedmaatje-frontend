@@ -20,8 +20,6 @@ function Logo({ klein }) {
   );
 }
 
-
-
 function WelcomeScreen({ onStart }) {
   return (
     <div className="screen-card welcome-screen">
@@ -232,13 +230,37 @@ function RegisterScreen({ name, setName, email, setEmail, password, setPassword,
 }
 
 function ChatScreen() {
-  const messages = [
+  const [messages, setMessages] = useState([
     { id: 1, author: "Opvoedmaatje", text: "Hoi! Ik ben er voor je. Waar lopen jullie nu tegenaan?" },
     { id: 2, author: "Jij", text: "We hebben veel strijd over schermtijd." },
     { id: 3, author: "Opvoedmaatje", text: "Dank je. Wat gebeurt er meestal vlak voordat de strijd begint?" },
     { id: 4, author: "Jij", text: "Als ik zeg dat het tijd is om te stoppen." },
     { id: 5, author: "Opvoedmaatje", text: "Helder. Ik geef je zo enkele ideeën om het rustiger te laten verlopen." },
-  ];
+  ]);
+  const [input, setInput] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const text = input.trim();
+    if (!text) return;
+
+    const userMessage = { id: Date.now(), author: "Jij", text };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, messages: [...messages, userMessage] }),
+      });
+      const data = await response.json();
+      const assistantMessage = { id: Date.now() + 1, author: "Opvoedmaatje", text: data.reply };
+      setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error("API call failed:", error);
+    }
+  };
 
   return (
     <div className="chat-screen">
@@ -257,8 +279,13 @@ function ChatScreen() {
             </div>
           ))}
         </div>
-        <form className="chat-input" onSubmit={(e) => e.preventDefault()}>
-          <input className="chat-field" placeholder="Typ een bericht…" />
+        <form className="chat-input" onSubmit={handleSubmit}>
+          <input
+            className="chat-field"
+            placeholder="Typ een bericht…"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
           <button className="send-button" type="submit">
             →
           </button>
