@@ -13,7 +13,7 @@ const GOAL_OPTIONS = [
 function Logo({ klein }) {
   return (
     <img
-      src="/logo-opvoedmaatje.png"
+      src="/Logo Transparent.png"
       alt="Opvoedmaatje"
       className={klein ? "logo-img logo-klein" : "logo-img"}
     />
