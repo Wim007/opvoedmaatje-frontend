@@ -72,16 +72,14 @@ module.exports = async function (context, req) {
         run.id
       );
 
-      if (runStatus.status === 'failed' || runStatus.status === 'cancelled') {
-        throw new Error(`Run ${runStatus.status}`);
+      if (runStatus.status === 'failed' || runStatus.status === 'cancelled' || runStatus.status === 'expired') {        throw new Error(`Run ${runStatus.status}`);
       }
     }
 
     // Get assistant's response
     const messages = await openai.beta.threads.messages.list(currentThreadId);
     const assistantMessage = messages.data.find(
-      msg => msg.role === 'assistant' && msg.run_id === run.id
-    );
+      msg => msg.role === 'assistant'    );
 
     if (!assistantMessage || !assistantMessage.content[0]) {
       throw new Error('No response from assistant');
