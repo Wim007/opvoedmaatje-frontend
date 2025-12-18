@@ -37,7 +37,7 @@ function WelcomeScreen({ onStart }) {
   );
 }
 
-function FamilyScreen({ onBack, onNext, parentName, setParentName, childNames, setChildNames }) {
+function FamilyScreen({ onBack, onNext, parentName, setParentName, childNames, setChildNames, childAges, setChildAges }) {
   return (
     <div className="screen-card">
       <div className="logo-row">
