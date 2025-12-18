@@ -28,7 +28,7 @@ function WelcomeScreen({ onStart }) {
       </div>
       <div className="card welcome-card">
         <h1>Welkom bij Opvoedmaatje</h1>
-        <p className="muted">Opvoeden is mooi, maar soms ook gewoon zwaar. Herken je die twijfels, frustratie of zorgen? Je bent niet de enige – en je hoeft het niet alleen te doen. Hier vind je een luisterend oor, zonder oordeel.</p>
+        <p className="muted">Opvoeden is soms mooi, soms vermoeiend – en dat mag er zijn. Herken je die twijfels, de uitdagingen of zorgen om je kind? Je staat er niet alleen voor. Bij Opvoedmaatje vind je een warm, luisterend oor en praktische handvatten, zonder oordeel. Samen kijken we wat er speelt en wat écht helpend is voor jou en je gezin.</p>
         <button className="btn primary full no-motion" onClick={onStart}>
           Starten
         </button>
