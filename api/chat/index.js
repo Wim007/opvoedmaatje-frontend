@@ -53,12 +53,19 @@ module.exports = async function (context, req) {
     });
 
     // Wait for completion
+        const MAX_WAIT_TIME = 30000; // 30 seconden timeout
+        const startTime = Date.now();
     let runStatus = await openai.beta.threads.runs.retrieve(
       currentThreadId,
       run.id
     );
 
     while (runStatus.status !== 'completed') {
+            // Check voor timeout
+            if (Date.now() - startTime > MAX_WAIT_TIME) {
+                      throw new Error('Assistant response duurde te lang. Probeer het opnieuw.');
+                    }
+      
       await new Promise(resolve => setTimeout(resolve, 1000));
       runStatus = await openai.beta.threads.runs.retrieve(
         currentThreadId,
