@@ -28,7 +28,7 @@ function WelcomeScreen({ onStart }) {
       </div>
       <div className="card welcome-card">
         <h1>Welkom bij Opvoedmaatje</h1>
-        <p className="muted">Samen vinden we rust in de opvoeding.</p>
+        <p className="muted">Opvoeden kan mooi zijn, maar soms ook best zwaar. Herken je die twijfels? Je bent niet de enige – en je hoeft het niet alleen te doen.</p>
         <button className="btn primary full no-motion" onClick={onStart}>
           Starten
         </button>
