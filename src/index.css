@@ -46,8 +46,7 @@ body {
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 16px 0;
-}
+  padding: 40px 0;}
 
 .logo-img {
   width: min(120px, 30vw);
@@ -75,14 +74,12 @@ body {
 }
 
 .welcome-card h1 {
-  font-size: 1.7rem;
-  line-height: 1.2;
+  font-size: 2rem;  line-height: 1.2;
   margin: 0;
 }
 
 .welcome-card .muted {
-  font-size: 1rem;
-  color: #4b5563;
+  font-size: 1.1rem;  color: #4b5563;
 }
 
 .card h1,
