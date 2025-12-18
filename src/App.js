@@ -13,7 +13,7 @@ const GOAL_OPTIONS = [
 function Logo({ klein }) {
   return (
     <img
-      src="/Logo Transparent.png"
+      src="/ChatGPT Image 18 dec 2025, 19_19_34.png"
       alt="Opvoedmaatje"
       className={klein ? "logo-img logo-klein" : "logo-img"}
     />
