@@ -48,12 +48,10 @@ body {
   padding: 40px 0;}
 
 .logo-img {
-  width: min(120px, 30vw);
-}
+  width: min(240px, 55vw);}
 
 .logo-klein {
-  width: min(70px, 17.5vw);
-}
+  width: min(140px, 32vw);}
 
 /* Cards */
 .card {
