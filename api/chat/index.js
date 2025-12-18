@@ -1,8 +1,9 @@
-const fetch = require('node-fetch');
+const OpenAI = require('openai');
 
 module.exports = async function (context, req) {
   const userMessage = req.body?.message;
-  
+  const threadId = req.body?.threadId;
+
   if (!userMessage) {
     context.res = {
       status: 400,
@@ -12,6 +13,8 @@ module.exports = async function (context, req) {
   }
 
   const openaiKey = process.env.OPENAI_API_KEY;
+  const assistantId = process.env.OPENAI_ASSISTANT_ID;
+
   if (!openaiKey) {
     context.res = {
       status: 500,
@@ -20,39 +23,74 @@ module.exports = async function (context, req) {
     return;
   }
 
+  if (!assistantId) {
+    context.res = {
+      status: 500,
+      body: { error: 'OpenAI Assistant ID not configured' }
+    };
+    return;
+  }
+
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${openaiKey}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: 'Je bent een opvoedkundige assistent die ouders helpt met opvoedvragen.' },
-          { role: 'user', content: userMessage }
-        ]
-      })
+    const openai = new OpenAI({ apiKey: openaiKey });
+
+    // Create or use existing thread
+    let currentThreadId = threadId;
+    if (!currentThreadId) {
+      const thread = await openai.beta.threads.create();
+      currentThreadId = thread.id;
+    }
+
+    // Add user message to thread
+    await openai.beta.threads.messages.create(currentThreadId, {
+      role: 'user',
+      content: userMessage
     });
 
-    const data = await response.json();
-    
-    if (!response.ok) {
-      context.res = {
-        status: response.status,
-        body: { error: data.error?.message || 'OpenAI API error' }
-      };
-      return;
+    // Run the assistant
+    const run = await openai.beta.threads.runs.create(currentThreadId, {
+      assistant_id: assistantId
+    });
+
+    // Wait for completion
+    let runStatus = await openai.beta.threads.runs.retrieve(
+      currentThreadId,
+      run.id
+    );
+
+    while (runStatus.status !== 'completed') {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      runStatus = await openai.beta.threads.runs.retrieve(
+        currentThreadId,
+        run.id
+      );
+
+      if (runStatus.status === 'failed' || runStatus.status === 'cancelled') {
+        throw new Error(`Run ${runStatus.status}`);
+      }
     }
+
+    // Get assistant's response
+    const messages = await openai.beta.threads.messages.list(currentThreadId);
+    const assistantMessage = messages.data.find(
+      msg => msg.role === 'assistant' && msg.run_id === run.id
+    );
+
+    if (!assistantMessage || !assistantMessage.content[0]) {
+      throw new Error('No response from assistant');
+    }
+
+    const responseText = assistantMessage.content[0].text.value;
 
     context.res = {
       status: 200,
       body: {
-        message: data.choices[0].message.content
+        message: responseText,
+        threadId: currentThreadId
       }
     };
   } catch (error) {
+    context.log.error('Error:', error);
     context.res = {
       status: 500,
       body: { error: error.message }
