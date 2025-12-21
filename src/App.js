@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./index.css";
+import AppScreen from "./components/AppScreen";
 
 const GOAL_OPTIONS = [
   "Grenzen stellen",
@@ -22,10 +23,15 @@ function Logo({ klein }) {
 
 function WelcomeScreen({ onStart }) {
   return (
-    <div className="screen-card welcome-screen">
-      <div className="logo-row">
-        <Logo />
-      </div>
+    <AppScreen
+      showLogo
+      logo={<Logo />}
+      actions={
+        <button className="btn primary full no-motion" onClick={onStart}>
+          Starten
+        </button>
+      }
+    >
       <div className="card welcome-card">
         <h1>Welkom bij Opvoedmaatje</h1>
         <div className="muted" style={{textAlign: 'left', lineHeight: '1.8'}}>
@@ -39,25 +45,32 @@ function WelcomeScreen({ onStart }) {
           <p style={{marginBottom: '12px', fontWeight: '600', color: '#1e40af'}}>Je staat er niet alleen voor.</p>
           <p>Bij Opvoedmaatje vind je:</p>
           <ul style={{marginLeft: '20px'}}>
-            <li> Een warm, luisterend oor zonder oordeel</li>
-            <li> Praktische Tips die écht werken</li>
-            <li> Rust en zelfvertrouwen in je rol als ouder</li>
+            <li>✓ Een warm, luisterend oor zonder oordeel</li>
+            <li>✓ Praktische Tips die écht werken</li>
+            <li>✓ Rust en zelfvertrouwen in je rol als ouder</li>
           </ul>
         </div>
-        <button className="btn primary full no-motion" onClick={onStart}>
-          Starten
-        </button>
       </div>
-    </div>
+    </AppScreen>
   );
 }
 
 function FamilyScreen({ onBack, onNext, parentName, setParentName, childNames, setChildNames, childAges, setChildAges }) {
   return (
-    <div className="screen-card">
-      <div className="logo-row">
-        <Logo klein />
-      </div>
+    <AppScreen
+      showLogo
+      logo={<Logo klein />}
+      actions={
+        <div className="btn-row">
+          <button className="btn secondary" onClick={onBack}>
+            Terug
+          </button>
+          <button className="btn primary" onClick={onNext} disabled={!parentName.trim() || !childNames.trim()}>
+            Volgende
+          </button>
+        </div>
+      }
+    >
       <div className="card form-card">
         <h2>Stel je gezin voor</h2>
         <p className="muted">Wij willen graag weten hoe we jullie kunnen aanspreken.</p>
@@ -91,16 +104,8 @@ function FamilyScreen({ onBack, onNext, parentName, setParentName, childNames, s
             placeholder="Bijv. 5 en 8"
           />
         </label>
-        <div className="btn-row">
-          <button className="btn secondary" onClick={onBack}>
-            Terug
-          </button>
-          <button className="btn primary" onClick={onNext} disabled={!parentName.trim() || !childNames.trim()}>
-            Volgende
-          </button>
-        </div>
       </div>
-    </div>
+    </AppScreen>
   );
 }
 
@@ -110,10 +115,20 @@ function GoalScreen({ onBack, onNext, parentName, childNames, goals, setGoals })
   };
 
   return (
-    <div className="screen-card">
-      <div className="logo-row">
-        <Logo klein />
-      </div>
+    <AppScreen
+      showLogo
+      logo={<Logo klein />}
+      actions={
+        <div className="btn-row">
+          <button className="btn secondary" onClick={onBack}>
+            Terug
+          </button>
+          <button className="btn primary" onClick={onNext} disabled={goals.length === 0}>
+            Starten
+          </button>
+        </div>
+      }
+    >
       <div className="card form-card">
         <h2>Waar wil je naartoe?</h2>
         <p className="muted">
@@ -132,16 +147,8 @@ function GoalScreen({ onBack, onNext, parentName, childNames, goals, setGoals })
             </label>
           ))}
         </div>
-        <div className="btn-row">
-          <button className="btn secondary" onClick={onBack}>
-            Terug
-          </button>
-          <button className="btn primary" onClick={onNext} disabled={goals.length === 0}>
-            Starten
-          </button>
-        </div>
       </div>
-    </div>
+    </AppScreen>
   );
 }
 
@@ -149,21 +156,23 @@ function IntroScreen({ parentName, childNames, goals, onNext }) {
   const goalsText = goals.length > 0 ? goals.join(", ") : "je opvoeddoelen";
 
   return (
-    <div className="screen-card">
-      <div className="logo-row">
-        <Logo klein />
-      </div>
+    <AppScreen
+      showLogo
+      logo={<Logo klein />}
+      actions={
+        <button className="btn primary full no-motion" onClick={onNext}>
+          Start gesprek
+        </button>
+      }
+    >
       <div className="card welcome-card">
         <h2>Gezellig dat je er bent, {parentName}!</h2>
         <p className="muted">
           Het is fijn dat je wilt werken aan {goalsText} in de opvoeding van {childNames}. Laten we samen
           beginnen met de eerste stap.
         </p>
-        <button className="btn primary full no-motion" onClick={onNext}>
-          Start gesprek
-        </button>
       </div>
-    </div>
+    </AppScreen>
   );
 }
 
@@ -214,10 +223,11 @@ function ChatScreen({ parentName, childNames, childAges, goals }) {
   };
 
   return (
-    <div className="screen-card chat-screen">
-      <div className="logo-row">
-        <Logo klein />
-      </div>
+    <AppScreen
+      showLogo
+      logo={<Logo klein />}
+      className="chat-screen"
+    >
       <div className="chat-container">
         <MessageList messages={messages} />
         <form className="input-row" onSubmit={handleSubmit}>
@@ -233,7 +243,7 @@ function ChatScreen({ parentName, childNames, childAges, goals }) {
           </button>
         </form>
       </div>
-    </div>
+    </AppScreen>
   );
 }
 
