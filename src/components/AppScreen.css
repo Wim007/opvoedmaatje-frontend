@@ -1,0 +1,76 @@
+/**
+ * AppScreen.css - Mobile-first layout styles
+ * Provides consistent 100vh fullscreen experience
+ */
+
+.app-screen {
+  /* Fullscreen container */
+  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  
+  /* Prevent overscroll */
+  overflow: hidden;
+  
+  /* Consistent mobile padding */
+  padding: 0;
+  margin: 0;
+}
+
+/* Header zone (logo) */
+.app-screen-header {
+  flex-shrink: 0;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Content zone (scrollable if needed) */
+.app-screen-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  /* Consistent padding */
+  padding: 0 24px;
+  
+  /* Prevent content from getting stuck under actions */
+  padding-bottom: 16px;
+  
+  /* iOS momentum scrolling */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Action zone (CTA buttons - always visible) */
+.app-screen-actions {
+  flex-shrink: 0;
+  padding: 16px 24px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  
+  /* Subtle separator */
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background: white;
+  
+  /* Ensure it stays on top */
+  position: relative;
+  z-index: 10;
+}
+
+/* Button row layout in actions */
+.app-screen-actions .btn-row {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Spacing helpers for AppScreen content */
+.app-screen-content > *:first-child {
+  margin-top: 0;
+}
+
+.app-screen-content > *:last-child {
+  margin-bottom: 0;
+}
