@@ -40,7 +40,7 @@ function WelcomeScreen({ onStart }) {
           <p>Bij Opvoedmaatje vind je:</p>
           <ul style={{marginLeft: '20px'}}>
             <li>✓ Een warm, luisterend oor zonder oordeel</li>
-            <li>✓ Praktische handvatten die écht werken</li>
+            <li>✓ Praktische Tips die écht werken</li>
             <li>✓ Rust en zelfvertrouwen in je rol als ouder</li>
           </ul>
         </div>
