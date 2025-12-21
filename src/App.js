@@ -28,7 +28,22 @@ function WelcomeScreen({ onStart }) {
       </div>
       <div className="card welcome-card">
         <h1>Welkom bij Opvoedmaatje</h1>
-        <p className="muted">Opvoeden is soms mooi, soms vermoeiend – en dat mag er zijn. Herken je die twijfels, de uitdagingen of zorgen om je kind? Je staat er niet alleen voor. Bij Opvoedmaatje vind je een warm, luisterend oor en praktische handvatten, zonder oordeel. Samen kijken we wat er speelt en wat écht helpend is voor jou en je gezin.</p>
+        <div className="muted" style={{textAlign: 'left', lineHeight: '1.8'}}>
+          <p style={{marginBottom: '16px', fontWeight: '500'}}>Herken je dit?</p>
+          <ul style={{marginLeft: '20px', marginBottom: '20px'}}>
+            <li>😓 Elke dag dezelfde strijd</li>
+            <li>❓ Twijfels over je aanpak</li>
+            <li>😔 Schuldgevoel als het niet lukt</li>
+            <li>😤 Frustratie die je niet wilde voelen</li>
+          </ul>
+          <p style={{marginBottom: '12px', fontWeight: '600', color: '#1e40af'}}>Je staat er niet alleen voor.</p>
+          <p>Bij Opvoedmaatje vind je:</p>
+          <ul style={{marginLeft: '20px'}}>
+            <li>✓ Een warm, luisterend oor zonder oordeel</li>
+            <li>✓ Praktische handvatten die écht werken</li>
+            <li>✓ Rust en zelfvertrouwen in je rol als ouder</li>
+          </ul>
+        </div>
         <button className="btn primary full no-motion" onClick={onStart}>
           Starten
         </button>
