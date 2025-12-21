@@ -39,9 +39,9 @@ function WelcomeScreen({ onStart }) {
           <p style={{marginBottom: '12px', fontWeight: '600', color: '#1e40af'}}>Je staat er niet alleen voor.</p>
           <p>Bij Opvoedmaatje vind je:</p>
           <ul style={{marginLeft: '20px'}}>
-            <li>✓ Een warm, luisterend oor zonder oordeel</li>
-            <li>✓ Praktische Tips die écht werken</li>
-            <li>✓ Rust en zelfvertrouwen in je rol als ouder</li>
+            <li> Een warm, luisterend oor zonder oordeel</li>
+            <li> Praktische Tips die écht werken</li>
+            <li> Rust en zelfvertrouwen in je rol als ouder</li>
           </ul>
         </div>
         <button className="btn primary full no-motion" onClick={onStart}>
