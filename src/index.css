@@ -372,3 +372,17 @@ body {
     max-width: 85%;
   }
 }
+
+/* Fix: Hide checkmarks before emoji items, keep only for 'Bij Opvoedmaatje' list */
+.welcome-screen ul:first-of-type li::before {
+  content: none !important;
+}
+
+/* Fix: Make Starten button blue and wider */
+.btn.primary.full {
+  background: #1e40af !important;
+  width: 100% !important;
+  max-width: 320px !important;
+  padding: 16px 48px !important;
+  font-size: 18px !important;
+}
